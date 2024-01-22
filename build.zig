@@ -58,7 +58,11 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
     });
+    exe_example.linkLibC();
+    exe_example.linkSystemLibrary("xcb");
+    exe_example.linkSystemLibrary("xcb-image");
     exe_example.root_module.addImport("phantom", phantom.module("phantom"));
+    exe_example.root_module.addImport("vizops", vizops.module("vizops"));
     exe_example.root_module.addImport("options", exe_options.createModule());
     b.installArtifact(exe_example);
 

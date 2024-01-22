@@ -1,15 +1,15 @@
 .{
-  .name = "phantom.display.xcb",
-  .version = "0.1.0",
-  .paths = .{"."},
-  .dependencies = .{
-    .phantom = .{
-      .url = "https://github.com/PhantomUIx/core/archive/d5b97be2bd30a1040a957fc1ca7f1c21785be34c.tar.gz",
-      .hash = "1220df5c8863c133147cfce9506b106d59dcd12531fdb52b2674cc4bd051011032a5",
+    .name = "phantom.display.xcb",
+    .version = "0.0.1",
+    .paths = .{"."},
+    .dependencies = .{
+        .phantom = .{
+            .url = "https://github.com/PhantomUIx/core/archive/ba3a93a0dba0037e33e56eca741a6f31616c9bdd.tar.gz",
+            .hash = "1220d1b9faa83c0ec7a8a67a3034b898eebaab93023a84c37a5a5e7833ad328fcc85",
+        },
+        .vizops = .{
+            .url = "https://github.com/MidstallSoftware/vizops/archive/626d6bbf78fe7d192d0dea77abb7d99d272f7039.tar.gz",
+            .hash = "1220f1f74b130449d782e38792cbe5d6b519ff706dd4f260f8cb0ced10a1f03f8eab",
+        },
     },
-    .vizops = .{
-      .url = "https://github.com/MidstallSoftware/vizops/archive/75ed00f8eb217d774878fc0416d882b5ebce2b07.tar.gz",
-      .hash = "1220f72b311022cffc91f2b08f1e958bf60e1ae0c4f84b7116b1de17ddfbad9b71e3",
-    },
-  },
 }
