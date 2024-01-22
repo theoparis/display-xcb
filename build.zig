@@ -33,12 +33,16 @@ pub fn build(b: *std.Build) !void {
         }, b.pathFromRoot("src"), b.allocator),
     });
 
-    _ = b.addModule("phantom.template.module", .{
+    _ = b.addModule("phantom.display.xcb", .{
         .root_source_file = .{ .path = b.pathFromRoot("src/phantom.zig") },
         .imports = &.{
             .{
                 .name = "phantom",
                 .module = phantom.module("phantom"),
+            },
+            .{
+                .name = "vizops",
+                .module = vizops.module("vizops"),
             },
         },
     });
