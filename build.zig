@@ -1,9 +1,13 @@
 const std = @import("std");
 const Phantom = @import("phantom");
 
-pub const phantomModule = Phantom.Sdk.PhantomModule{};
+pub const phantomModule = Phantom.Sdk.PhantomModule{
+    .provides = .{
+        .displays = &.{"xcb"},
+    },
+};
 
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
     const no_importer = b.option(bool, "no-importer", "disables the import system (not recommended)") orelse false;
@@ -11,13 +15,25 @@ pub fn build(b: *std.Build) void {
     const no_tests = b.option(bool, "no-tests", "skip generating tests") orelse false;
     const scene_backend = b.option(Phantom.SceneBackendType, "scene-backend", "The scene backend to use for the example") orelse .headless;
 
+    const vizops = b.dependency("vizops", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
     const phantom = b.dependency("phantom", .{
         .target = target,
         .optimize = optimize,
         .@"no-importer" = no_importer,
+        .@"no-docs" = no_docs,
+        .@"import-module" = try Phantom.Sdk.ModuleImport.init(&.{
+            .{
+                .name = "vizops",
+                .module = vizops.module("vizops"),
+            },
+        }, b.pathFromRoot("src"), b.allocator),
     });
 
-    const module = b.addModule("phantom.template.module", .{
+    _ = b.addModule("phantom.template.module", .{
         .root_source_file = .{ .path = b.pathFromRoot("src/phantom.zig") },
         .imports = &.{
             .{
@@ -39,20 +55,13 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     exe_example.root_module.addImport("phantom", phantom.module("phantom"));
-    exe_example.root_module.addImport("phantom.template.module", module);
     exe_example.root_module.addImport("options", exe_options.createModule());
     b.installArtifact(exe_example);
 
     if (!no_tests) {
         const step_test = b.step("test", "Run all unit tests");
 
-        const unit_tests = b.addTest(.{
-            .root_source_file = .{
-                .path = b.pathFromRoot("src/phantom.zig"),
-            },
-            .target = target,
-            .optimize = optimize,
-        });
+        const unit_tests = phantom.artifact("test");
 
         unit_tests.root_module.addImport("phantom", phantom.module("phantom"));
 
